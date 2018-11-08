@@ -4,7 +4,8 @@ import com.mycompany.store.domain.ProductOrder;
 import com.mycompany.store.repository.ProductOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.mycompany.store.security.SecurityUtils;
+import com.mycompany.store.security.AuthoritiesConstants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,14 @@ public class ProductOrderService {
     @Transactional(readOnly = true)
     public Page<ProductOrder> findAll(Pageable pageable) {
         log.debug("Request to get all ProductOrders");
-        return productOrderRepository.findAll(pageable);
+        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN))
+        {
+            return productOrderRepository.findAll(pageable);
+        } else
+            return productOrderRepository.findAllByCustomerUserLogin(
+                SecurityUtils.getCurrentUserLogin().get(),
+                pageable
+            );
     }
 
 
