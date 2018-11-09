@@ -20,6 +20,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -199,6 +203,7 @@ public class ProductOrderResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username="admin", authorities={"ROLE_ADMIN"}, password = "admin")
     public void getAllProductOrders() throws Exception {
         // Initialize the database
         productOrderRepository.saveAndFlush(productOrder);
@@ -215,6 +220,7 @@ public class ProductOrderResourceIntTest {
     
     @Test
     @Transactional
+    @WithMockUser(username="admin", authorities={"ROLE_ADMIN"}, password = "admin")
     public void getProductOrder() throws Exception {
         // Initialize the database
         productOrderRepository.saveAndFlush(productOrder);
